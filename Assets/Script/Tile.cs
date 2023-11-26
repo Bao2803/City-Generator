@@ -6,84 +6,75 @@ using UnityEngine;
 /// </summary>
 public class Tile : MonoBehaviour
 {
-    // Index of tiles (of tileObjects in LayoutGeneration) that can be place ABOVE THIS tile
-    private List<int> top;
-    public List<int> Top
-    {
-        get { return top; }
-        set { top = value; }
-    }
-
-    // Index of tiles (of tileObjects in LayoutGeneration) that can be place RIGHT THIS tile
-    private List<int> right;
-    public List<int> Right
-    {
-        get { return right; }
-        set { right = value; }
-    }
-
-    // Index of tiles (of tileObjects in LayoutGeneration) that can be place BOTTOM THIS tile
-    private List<int> bottom;
-    public List<int> Bottom
-    {
-        get { return bottom; }
-        set { bottom = value; }
-    }
-
-    // Index of tiles (of tileObjects in LayoutGeneration) that can be place LEFT THIS tile
-    private List<int> left;
-    public List<int> Left
-    {
-        get { return left; }
-        set { left = value; }
-    }
+    public List<int> Top { get; set; }
+    public List<int> Right { get; set; }
+    public List<int> Bottom { get; set; }
+    public List<int> Left { get; set; }
 
     public int[] edgeLabel = new int[4]; // [top, right, bottom, left]
-    public void CreateRule(IEnumerable<Tile> prefabTiles)
+    public void CreateRule(int thisIndex, Tile[] prefabTiles)
     {
         // Replace old lists
-        top = new();
-        right = new();
-        bottom = new();
-        left = new();
+        this.Top = new();
+        this.Right = new();
+        this.Bottom = new();
+        this.Left = new();
 
-        int index = 0;
-        foreach (Tile tile in prefabTiles)
+        // Rules
+        int thisTotal = 0;                                                                      // total edges with road for this tile
+        foreach (int i in this.edgeLabel)
         {
+            thisTotal += i;
+        }
+        int thisIntersect = thisTotal >= 3 ? 1 : 0;                                             // whether this tile is an intersection
+        int thisTurn = (thisTotal == 2 && (this.edgeLabel[0] != this.edgeLabel[2])) ? 1 : 0;    // whether this tile is a turn
+
+        for (int index = 0; index < prefabTiles.Length; index++)
+        {
+            Tile tile = prefabTiles[index];
+
+            int total = 0;                                                                      // total edges with road for current tile
+            foreach (int i in tile.edgeLabel)
+            { 
+                total += i;
+            }
+            int intersect = total >= 3 ? 1 : 0;                                                 // whether current tile is an intersection
+            int turn = (total == 2 && (tile.edgeLabel[0] != tile.edgeLabel[2])) ? 1 : 0;        // whether current tile is a turn
+
+            bool ok = thisIntersect + intersect + thisTurn + turn < 2;
+
             // top
-            if (this.edgeLabel[0] == tile.edgeLabel[2])
+            if (this.edgeLabel[0] == tile.edgeLabel[2] && ok)
             {
-                this.top.Add(index);
+                this.Top.Add(index);
             }
 
             // right
-            if (this.edgeLabel[1] == tile.edgeLabel[3])
+            if (this.edgeLabel[1] == tile.edgeLabel[3] && ok)
             {
-                this.right.Add(index);
+                this.Right.Add(index);
             }
 
             // bottom
-            if (this.edgeLabel[2] == tile.edgeLabel[0])
+            if (this.edgeLabel[2] == tile.edgeLabel[0] && ok)
             {
-                this.bottom.Add(index);
+                this.Bottom.Add(index);
             }
 
             // left
-            if (this.edgeLabel[3] == tile.edgeLabel[1])
+            if (this.edgeLabel[3] == tile.edgeLabel[1] && ok)
             {
-                this.left.Add(index);
+                this.Left.Add(index);
             }
-
-            index++;
         }
     }
 
     public override string ToString()
     {
-        string tops = "[" + string.Join(", ", this.top) + "]";
-        string rights = "[" + string.Join(", ", this.right) + "]";
-        string bottoms = "[" + string.Join(", ", this.bottom) + "]";
-        string lefts = "[" + string.Join(", ", this.left) + "]";
+        string tops = "[" + string.Join(", ", this.Top) + "]";
+        string rights = "[" + string.Join(", ", this.Right) + "]";
+        string bottoms = "[" + string.Join(", ", this.Bottom) + "]";
+        string lefts = "[" + string.Join(", ", this.Left) + "]";
         return $"Tile: {{\n" +
             $"\ttop: {tops}\n" +
             $"\tright: {rights}\n" +

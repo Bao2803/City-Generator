@@ -16,9 +16,9 @@ public class LayoutGeneration : MonoBehaviour
     private void Awake()
     {
         // Generate adjacency rules for tiles
-        foreach (Tile tile in tileObjects)
+        for (int i = 0; i < tileObjects.Length; i++)
         {
-            tile.CreateRule(tileObjects);
+            tileObjects[i].CreateRule(i, tileObjects);
         }
 
         // Initialize the Grid and fill the cells with all available options
@@ -98,7 +98,7 @@ public class LayoutGeneration : MonoBehaviour
 
         // Spawn prefab
         Instantiate(tileObjects[pickedTileIndex], cellToCollapse.transform.position, tileObjects[pickedTileIndex].transform.rotation);
-        Debug.Log("Remove " + cellToCollapse.ToString());
+        //Debug.Log("Remove " + cellToCollapse.ToString());
     }
 
     /// <summary>
