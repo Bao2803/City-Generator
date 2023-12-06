@@ -29,10 +29,18 @@ public class Cell : MonoBehaviour
     public override string ToString()
     {
         string options = "[" + string.Join(", ", this.Options) + "]";
-        return $"{{\n" +
-            $"\tindex: {Index}\n" +
-            $"\tisCollapsed: {IsCollapsed}\n" +
-            $"\toptions: {options}\n" +
-            $"}}";
+        //return $"{{\n" +
+        //    $"\tindex: {Index}\n" +
+        //    $"\tisCollapsed: {IsCollapsed}\n" +
+        //    $"\toptions: {options}\n" +
+        //    $"}}";
+        string array = "[";
+        foreach (int i in this.Options)
+        {
+            array += i;
+            array += " ";
+        }
+        array += "]";
+        return array;
     }
 }

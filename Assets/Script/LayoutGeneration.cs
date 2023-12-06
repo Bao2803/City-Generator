@@ -37,24 +37,48 @@ public class LayoutGeneration : MonoBehaviour
 
     private void Start()
     {
-        //for (int i = 0; i < tileObjects.Length; i++)
-        //{
-        //    Debug.Log("Tile " + i);
-        //    Debug.Log(tileObjects[i]);
-        //}
-
-        List<Cell> sortedGrid = new(grid);  // keep track of the running of Wave Function Collapse
-        while (sortedGrid.Count > 0)
+        List<Cell> sortedGrid = new(grid);                  // act like a Priority Queue    
+        for (int i = 0; i < dimension * dimension; i++)
         {
-            //foreach (Cell cell in sortedGrid)
-            //{
-            //    Debug.Log(cell.ToString());
-            //}
-
-            Cell cellToCollapse = PickCell(sortedGrid);
-            Collapse(cellToCollapse);
-            Propagate();
+            if (WaveFunctionCollapse(sortedGrid))
+            {
+                Debug.Log("SUCCESS i: " + i);
+                break;
+            }
+            Debug.Log("FAILED i: " + i);
         }
+        Debug.Log("Count: " + sortedGrid.Count);
+    }
+
+    /// <summary>
+    /// Perform Wave Function Collapse Algorithm on the given grid
+    /// </summary>
+    /// <param name="sortedGrid">a "Priority Queue" to select which tile to collapse</param>
+    /// <returns></returns>
+    private bool WaveFunctionCollapse(List<Cell> sortedGrid)
+    {
+        if (sortedGrid.Count == 0) { return true; }
+
+        Cell cellToCollapse = PickCell(sortedGrid);
+        int selectedTile = Collapse(cellToCollapse);
+        
+        // Failure
+        if (selectedTile == -1) 
+        {
+            sortedGrid.Add(cellToCollapse);
+            return false;
+        }
+
+        // Success
+        Propagate();
+        if (!WaveFunctionCollapse(sortedGrid)) 
+        {
+            cellToCollapse.Options.Remove(selectedTile);
+            sortedGrid.Add(cellToCollapse);
+            return false;
+        }
+
+        return true; 
     }
 
     /// <summary>
@@ -89,16 +113,28 @@ public class LayoutGeneration : MonoBehaviour
     /// Collapse a cell
     /// </summary>
     /// <param name="cellToCollapse"> A cell that is picked by PickCell</param>
-    private void Collapse(Cell cellToCollapse)
+    private int Collapse(Cell cellToCollapse)
     {
-        // Collapse
-        cellToCollapse.IsCollapsed = true;
-        int pickedTileIndex = cellToCollapse.Options[UnityEngine.Random.Range(0, cellToCollapse.Options.Count)];
-        cellToCollapse.Options = new List<int> { pickedTileIndex };
+        // Can this cell be collapsed?
+        int pickedTileIndex;
+        try
+        {
+            pickedTileIndex = cellToCollapse.Options[UnityEngine.Random.Range(0, cellToCollapse.Options.Count)];  
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            return -1;   // NO!
+        }
 
-        // Spawn prefab
-        Instantiate(tileObjects[pickedTileIndex], cellToCollapse.transform.position, tileObjects[pickedTileIndex].transform.rotation);
-        //Debug.Log("Remove " + cellToCollapse.ToString());
+        // YES!
+        cellToCollapse.IsCollapsed = true;
+        cellToCollapse.Options = new List<int> { pickedTileIndex };
+        Instantiate(                                                    // spawn tile
+            tileObjects[pickedTileIndex],
+            cellToCollapse.transform.position, 
+            tileObjects[pickedTileIndex].transform.rotation
+            );
+        return pickedTileIndex;
     }
 
     /// <summary>
