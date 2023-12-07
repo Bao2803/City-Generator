@@ -1,0 +1,39 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Rendering;
+
+public class Wing
+{
+    RectInt bounds;
+    Story[] stories;
+    Roof roof;
+
+    public RectInt Bounds { get => bounds; }
+    public Story[] Stories { get => stories; }
+    public Roof GetRoof { get => roof; }
+
+    public Wing(RectInt bounds)
+    {
+        this.bounds = bounds;
+    }
+
+    public Wing(RectInt bounds, Story[] stories, Roof roof)
+    {
+        this.bounds = bounds;
+        this.stories = stories;
+        this.roof = roof;
+    }
+
+    public override string ToString()
+    {
+        string wing = "Wing (bound: " + bounds.ToString() + "):\n";
+
+        foreach(Story story in stories)
+        {
+            wing += "\t" + story.ToString() + "\n";
+        }
+
+        return wing;
+    }
+}
