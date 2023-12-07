@@ -13,6 +13,9 @@ public class LayoutGeneration : MonoBehaviour
     public Cell cellObj;        // the pre-defined cell prefab
     private List<Cell> grid;    // the internal grid used for WFC
 
+    private int prob = 10;
+    private int maxHeight = 10;
+
     private void Awake()
     {
         // Generate adjacency rules for tiles
@@ -21,40 +24,70 @@ public class LayoutGeneration : MonoBehaviour
             tileObjects[i].CreateRule(i, tileObjects);
         }
 
-        // Initialize the Grid and fill the cells with all available options
-        grid = new List<Cell>(dimension * dimension);
-        for (int y = 0; y < dimension; y++)
-        {
-            for (int x = 0; x < dimension; x++)
-            {
-                // Graph start at position 0,0,0. +Z is to the right and +X is to the bottom.
-                Cell newCell = Instantiate(cellObj, new Vector3(y, 0, x), Quaternion.identity);     
-                newCell.Setup(y * dimension + x, tileObjects.Length);
-                grid.Add(newCell);
-            }
-        }
     }
 
     private void Start()
     {
-        //for (int i = 0; i < tileObjects.Length; i++)
-        //{
-        //    Debug.Log("Tile " + i);
-        //    Debug.Log(tileObjects[i]);
-        //}
+        List<Cell> sortedGrid;
+        bool returnVal = false;
+        int totalBuilding = prob * dimension * dimension / 100;
 
-        List<Cell> sortedGrid = new(grid);  // keep track of the running of Wave Function Collapse
-        while (sortedGrid.Count > 0)
+        while (!returnVal)
         {
-            //foreach (Cell cell in sortedGrid)
-            //{
-            //    Debug.Log(cell.ToString());
-            //}
+            // Initialize the Grid and fill the cells with all available options
+            grid = new List<Cell>(dimension * dimension);
+            for (int row = 0; row < dimension; row++)
+            {
 
-            Cell cellToCollapse = PickCell(sortedGrid);
-            Collapse(cellToCollapse);
+                for (int col = 0; col < dimension; col++)
+                {
+                    // Graph start at position 0,0,0. +Z is to the right and +X is to the bottom.
+                    Cell newCell = new(Tuple.Create(row, col), this.tileObjects.Length);
+                    grid.Add(newCell);
+                }
+            }
+
+            sortedGrid = new(grid);  // keep track of the running of Wave Function Collapse
+
+            // Place some buildings first to adapt the number of building
+            
+            for (int i = 0; i < totalBuilding; i++)
+            {
+                Cell buildingCell = sortedGrid[UnityEngine.Random.Range(0, sortedGrid.Count)];
+                sortedGrid.Remove(buildingCell);
+                buildingCell.Height = UnityEngine.Random.Range(1, maxHeight);
+                buildingCell.Options = new List<int> { 0 };
+                buildingCell.IsCollapsed = true;
+            }
             Propagate();
+
+            returnVal = true;
+
+            while (returnVal && sortedGrid.Count > 0)
+            {
+                Cell cellToCollapse = PickCell(sortedGrid);
+                returnVal = returnVal && Collapse(cellToCollapse);
+                Propagate();
+            }
         }
+
+        foreach (Cell cell in grid)
+        {
+            if (cell.Options[0] != 0)
+            {
+                Tile curr = Instantiate(
+                    this.tileObjects[cell.Options[0]],
+                    new Vector3(cell.Index.Item1 * 3 + (float) 1.5, 0, cell.Index.Item2 * 3 + (float)1.5),
+                    this.tileObjects[cell.Options[0]].transform.rotation
+                    );
+                curr.transform.localScale = new Vector3(3f, 3f, 3f);
+            }
+            else
+            {
+
+            }
+        }
+
     }
 
     /// <summary>
@@ -64,17 +97,15 @@ public class LayoutGeneration : MonoBehaviour
     /// <returns>A cell with the lowest entropy in the current grid</returns>
     private Cell PickCell(List<Cell> sortedGrid)
     {
-        sortedGrid.Sort((a, b) => { return a.Options.Count - b.Options.Count; });
+        sortedGrid.Sort((a, b) => { return a.Options.Count - b.Options.Count; }); 
 
         // Find all least entropy cells
-        int stopIndex = 0;
-        for (int i = 1; i < sortedGrid.Count; i++)
+        int stopIndex = 1;
+
+        while (stopIndex < sortedGrid.Count &&
+                sortedGrid[stopIndex].Options.Count == sortedGrid[0].Options.Count)
         {
-            if (sortedGrid[i].Options.Count > sortedGrid[0].Options.Count)
-            {
-                stopIndex = i;
-                break;
-            }
+            stopIndex++;
         }
 
         // Pick a cell from the least entropy set
@@ -89,16 +120,16 @@ public class LayoutGeneration : MonoBehaviour
     /// Collapse a cell
     /// </summary>
     /// <param name="cellToCollapse"> A cell that is picked by PickCell</param>
-    private void Collapse(Cell cellToCollapse)
+    private bool Collapse(Cell cellToCollapse)
     {
+        if (cellToCollapse.Options.Count <= 0) return false;
+
         // Collapse
         cellToCollapse.IsCollapsed = true;
         int pickedTileIndex = cellToCollapse.Options[UnityEngine.Random.Range(0, cellToCollapse.Options.Count)];
         cellToCollapse.Options = new List<int> { pickedTileIndex };
 
-        // Spawn prefab
-        Instantiate(tileObjects[pickedTileIndex], cellToCollapse.transform.position, tileObjects[pickedTileIndex].transform.rotation);
-        //Debug.Log("Remove " + cellToCollapse.ToString());
+        return true;
     }
 
     /// <summary>
