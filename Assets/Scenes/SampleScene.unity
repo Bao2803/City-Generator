@@ -152,21 +152,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eebf5d5a41a654640a4787e2b187c65e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dimension: 50
+  dimension: 15
   tileObjects:
   - {fileID: -7837174673238979615, guid: 0834763782b55d342aa24f52e67f2ae7, type: 3}
+  - {fileID: 8699704637390064043, guid: b8f5e593899ee6549aca048b050ef0d2, type: 3}
+  - {fileID: -2867468581101094935, guid: 57b18b3cb1cad8e46a5077d456e2fe97, type: 3}
   - {fileID: -4914921545725709101, guid: 64c5367bdb7d22f4d8da917b207f5110, type: 3}
   - {fileID: -8124755411591151470, guid: 798fe81bebce883468552db4fc7dd19f, type: 3}
   - {fileID: 1158906387138996433, guid: 15423d390a115ff4dab17f09b188f666, type: 3}
   - {fileID: -4264578877163506106, guid: 25ffebd6abc8d6e47bcf0d98f05b1440, type: 3}
   - {fileID: -1582177976791751792, guid: 69fe0feab650e8c45b79d1092ebe519b, type: 3}
-  - {fileID: 8699704637390064043, guid: b8f5e593899ee6549aca048b050ef0d2, type: 3}
-  - {fileID: -2867468581101094935, guid: 57b18b3cb1cad8e46a5077d456e2fe97, type: 3}
   - {fileID: 2640557001516839984, guid: 1de5e6fb30c3d7d46b90f5f7ab0ff565, type: 3}
   - {fileID: 6320645613402182337, guid: 973de4bc147f8794a91a1b385ca57bfe, type: 3}
   - {fileID: -1680065310604336941, guid: d5f9ae9facb5bdf42b3a7d66d2e3bb45, type: 3}
   - {fileID: -996053673329596060, guid: 323686946915198438e2ad8f96226974, type: 3}
-  cellObj: {fileID: 8255449184611206480, guid: 6ef23c9ff3d406c47842f2f1a4721ab8, type: 3}
+  minHeight: 0
 --- !u!4 &347891634
 Transform:
   m_ObjectHideFlags: 0

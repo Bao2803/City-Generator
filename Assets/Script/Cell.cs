@@ -1,46 +1,72 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// Each cell in the defined grid in LayoutGeneration
 /// </summary>
-public class Cell : MonoBehaviour
+public class Cell
 {
-    public int Index { get; set; }
+    public Tuple<int, int> Index { get; set; }
     public bool IsCollapsed { get; set; }
-    public List<int> Options { get; set; }
-
-    public Cell()
-    {
-        this.IsCollapsed = false;
-        this.Options = new();
+    private int chosenOption = -1;
+    public int ChosenOption 
+    { 
+        get => this.chosenOption; 
+        set => this.chosenOption = value; 
     }
 
-    public void Setup(int index, int tileOptions)
+    private List<int> currentOptions;
+    public List<int> CurrentOptions { get => currentOptions; set => currentOptions = value; }
+
+    private List<int> deletedOptions;
+
+    public int Height { get; set; }
+
+    public Cell(Tuple<int, int> index, int tileOptions)
     {
         this.Index = index;
         this.IsCollapsed = false;
+        this.Height = 0;
+        this.chosenOption = -1;
+        this.deletedOptions = new();
+        this.currentOptions = new();
         for (int i = 0; i < tileOptions; i++)
         {
-            Options.Add(i);
+            this.currentOptions.Add(i);
+
         }
     }
 
-    public override string ToString()
+    public bool Collapse()
     {
-        string options = "[" + string.Join(", ", this.Options) + "]";
-        //return $"{{\n" +
-        //    $"\tindex: {Index}\n" +
-        //    $"\tisCollapsed: {IsCollapsed}\n" +
-        //    $"\toptions: {options}\n" +
-        //    $"}}";
-        string array = "[";
-        foreach (int i in this.Options)
+        int count = CurrentOptions.Count;
+        if (count <= 0) return false;
+
+        // Succeed to collapse this cell
+        this.IsCollapsed = true;
+        this.ChosenOption = CurrentOptions[UnityEngine.Random.Range(0, count)]; 
+
+        return true;
+    }
+
+    public void Uncollapse()
+    {
+        this.IsCollapsed = false;
+        this.CurrentOptions.Remove(this.chosenOption);
+        this.deletedOptions.Add(this.chosenOption);
+        this.chosenOption = -1;
+    }
+
+    public void RestoreOptions()
+    {
+        this.IsCollapsed = false;
+        this.chosenOption = -1;
+        int count = this.deletedOptions.Count;
+        for (int i = count - 1; i >= 0; i--)
         {
-            array += i;
-            array += " ";
+            this.CurrentOptions.Add(deletedOptions[i]);
+            this.deletedOptions.RemoveAt(i);
         }
-        array += "]";
-        return array;
     }
 }

@@ -6,13 +6,13 @@ using UnityEngine;
 /// </summary>
 public class Tile : MonoBehaviour
 {
-    public List<int> Top { get; set; }
-    public List<int> Right { get; set; }
-    public List<int> Bottom { get; set; }
-    public List<int> Left { get; set; }
+    public List<int> Top { get; private set; }
+    public List<int> Right { get; private set; }
+    public List<int> Bottom { get; private set; }
+    public List<int> Left { get; private set; }
 
     public int[] edgeLabel = new int[4]; // [top, right, bottom, left]
-    public void CreateRule(int thisIndex, Tile[] prefabTiles)
+    public void CreateRule(Tile[] prefabTiles)
     {
         // Replace old lists
         this.Top = new();
@@ -67,19 +67,5 @@ public class Tile : MonoBehaviour
                 this.Left.Add(index);
             }
         }
-    }
-
-    public override string ToString()
-    {
-        string tops = "[" + string.Join(", ", this.Top) + "]";
-        string rights = "[" + string.Join(", ", this.Right) + "]";
-        string bottoms = "[" + string.Join(", ", this.Bottom) + "]";
-        string lefts = "[" + string.Join(", ", this.Left) + "]";
-        return $"Tile: {{\n" +
-            $"\ttop: {tops}\n" +
-            $"\tright: {rights}\n" +
-            $"\tbottom: {bottoms}\n" +
-            $"\tleft: {lefts}\n" +
-            $"}}\n";
     }
 }
