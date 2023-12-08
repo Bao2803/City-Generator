@@ -15,6 +15,7 @@ public class LayoutGeneration : MonoBehaviour
 
     private int prob = 10;
     private int maxHeight = 10;
+    public BuildingSettings settings;
 
     private void Awake()
     {
@@ -84,7 +85,12 @@ public class LayoutGeneration : MonoBehaviour
             }
             else
             {
-
+                Building b = BuildingGenerator.Generate(
+                    settings,
+                    new Vector3(cell.Index.Item1 * 3 + 3f, 0, cell.Index.Item2 * 3 + 3f)
+                    );
+                GetComponent<BuildingRenderer>().Render(b);
+                Debug.Log(b.ToString());
             }
         }
 

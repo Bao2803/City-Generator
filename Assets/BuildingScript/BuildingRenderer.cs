@@ -9,9 +9,11 @@ public class BuildingRenderer : MonoBehaviour
     public Transform[] wallPrefab;
     public Transform[] roofPrefab;
     Transform bldgFolder;
+    private Vector3 locaiton;
 
     public void Render(Building bldg)
     {
+        locaiton = bldg.location;
         bldgFolder = new GameObject("Building").transform;
         foreach (Wing wing in bldg.Wings)
         {
@@ -77,7 +79,7 @@ public class BuildingRenderer : MonoBehaviour
 
     private void PlaceFloor(int x, int y, int level, Transform storyFolder)
     {
-        Transform f = Instantiate(floorPrefab, storyFolder.TransformPoint(new Vector3(x * -3f, 0f + level * 2.5f, y * -3f)), Quaternion.identity);
+        Transform f = Instantiate(floorPrefab, storyFolder.TransformPoint(new Vector3(x * -3f + locaiton.x, 0f + level * 2.5f, y * -3f + locaiton.z)), Quaternion.identity);
         f.SetParent(storyFolder);
     }
 
@@ -87,9 +89,9 @@ public class BuildingRenderer : MonoBehaviour
             wall,
             storyFolder.TransformPoint(
                 new Vector3(
-                    x * -3f,
+                    x * -3f + locaiton.x,
                     0.3f + level * 2.5f,
-                    y * 3f - 0.5f
+                    y * 3f - 0.5f + locaiton.z
                     )
                 ),
             Quaternion.Euler(0, 90, 0));
@@ -102,9 +104,9 @@ public class BuildingRenderer : MonoBehaviour
             wall,
             storyFolder.TransformPoint(
                 new Vector3(
-                    x * -3f - 2.5f,
+                    x * -3f - 2.5f + locaiton.x,
                     0.3f + level * 2.5f,
-                    y * -3f
+                    y * -3f + locaiton.z
                     )
                 ),
             Quaternion.identity);
@@ -117,9 +119,9 @@ public class BuildingRenderer : MonoBehaviour
             wall,
             storyFolder.TransformPoint(
                 new Vector3(
-                    x * - 3f - 3f,
+                    x * - 3f - 3f + locaiton.x,
                     0.3f + level * 2.5f,
-                    y * -3f -2.5f
+                    y * -3f -2.5f + locaiton.z
                     )
                 ),
             Quaternion.Euler(0, 270, 0));
@@ -132,9 +134,9 @@ public class BuildingRenderer : MonoBehaviour
             wall,
             storyFolder.TransformPoint(
                 new Vector3(
-                    x * -3f - 0.5f,
+                    x * -3f - 0.5f + locaiton.x,
                     0.3f + level * 2.5f,
-                    y * -3f - 3f
+                    y * -3f - 3f + locaiton.z
                     )
                 ),
             Quaternion.Euler(0, 180, 0));
@@ -159,9 +161,9 @@ public class BuildingRenderer : MonoBehaviour
             roofPrefab[(int)type],
             wingFolder.TransformPoint(
                 new Vector3(
-                        x * -3f + rotationOffset[(int)direction].x,
+                        x * -3f + rotationOffset[(int)direction].x + locaiton.x,
                         level * 2.5f + (type == RoofType.Point ? -0.3f : 0f),
-                        y * -3f + rotationOffset[(int)direction].z
+                        y * -3f + rotationOffset[(int)direction].z + locaiton.z
                     )
                 ),
             Quaternion.Euler(0f, rotationOffset[(int)direction].y, 0f)

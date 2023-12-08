@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 347891634}
   - component: {fileID: 347891633}
+  - component: {fileID: 347891635}
   m_Layer: 0
   m_Name: LayoutGenerator
   m_TagString: Untagged
@@ -152,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eebf5d5a41a654640a4787e2b187c65e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dimension: 16
+  dimension: 25
   tileObjects:
   - {fileID: -7837174673238979615, guid: 0834763782b55d342aa24f52e67f2ae7, type: 3}
   - {fileID: -4914921545725709101, guid: 64c5367bdb7d22f4d8da917b207f5110, type: 3}
@@ -166,7 +167,7 @@ MonoBehaviour:
   - {fileID: 6320645613402182337, guid: 973de4bc147f8794a91a1b385ca57bfe, type: 3}
   - {fileID: -1680065310604336941, guid: d5f9ae9facb5bdf42b3a7d66d2e3bb45, type: 3}
   - {fileID: -996053673329596060, guid: 323686946915198438e2ad8f96226974, type: 3}
-  cellObj: {fileID: 8255449184611206480, guid: 6ef23c9ff3d406c47842f2f1a4721ab8, type: 3}
+  settings: {fileID: 11400000, guid: 197e0e08480b15a4dae6b716858c0250, type: 2}
 --- !u!4 &347891634
 Transform:
   m_ObjectHideFlags: 0
@@ -182,6 +183,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &347891635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 347891632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 798e4bd48034ade4bbaa1303d3bd0a15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floorPrefab: {fileID: 400002, guid: db6c657c83c8c6d4288f5722db7faa7c, type: 3}
+  wallPrefab:
+  - {fileID: 400002, guid: 5bd7549d4ba97824eb10d08267faab67, type: 3}
+  - {fileID: 400002, guid: 5c45b4eba8761c34aab800fe54d950a1, type: 3}
+  - {fileID: 400002, guid: 83561f2f57857b1448e769054ae5e53b, type: 3}
+  roofPrefab:
+  - {fileID: 400002, guid: 3ac29a2820fd760489c1f74381389614, type: 3}
+  - {fileID: 400002, guid: 8a9c3ce2f8d1f1243b1d24a30042b9b3, type: 3}
+  - {fileID: 400002, guid: adf888a5fbb8d464194221d63f51fd13, type: 3}
+  - {fileID: 400002, guid: a818edceca6cf6a448b2474e1d64f0c2, type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

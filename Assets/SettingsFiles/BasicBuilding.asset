@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 174ffec0e0b722746b568a16b2a997b8, type: 3}
   m_Name: BasicBuilding
   m_EditorClassIdentifier: 
-  buildingSize: {x: 5, y: 3}
+  buildingSize: {x: 1, y: 1}
+  wingsStrategy: {fileID: 0}
+  wingStrategy: {fileID: 0}
+  storiesStrategy: {fileID: 0}
+  storyStrategy: {fileID: 0}
+  wallsStrategy: {fileID: 0}
+  roofStrategy: {fileID: 0}
